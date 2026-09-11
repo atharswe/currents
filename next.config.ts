@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   // being traced and bundled into the server build.
   serverExternalPackages: ["better-sqlite3"],
   typedRoutes: true,
+  output: "standalone",
 };
 
 export default nextConfig;

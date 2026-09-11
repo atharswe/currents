@@ -1,0 +1,13 @@
+services:
+  currents:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - currents-data:/data
+    environment:
+      DATABASE_PATH: /data/currents.db
+      CURRENTS_ALLOW_PRIVATE_HOSTS: "false"
+
+volumes:
+  currents-data:
