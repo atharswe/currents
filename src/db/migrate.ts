@@ -2,15 +2,14 @@
  * Applies pending migrations and exits. The app also migrates on first DB access, but a
  * standalone entrypoint lets containers and CI run the step explicitly before serving traffic.
  */
+import { createDb } from "./client";
 import { databasePath } from "./path";
 
-async function main() {
+try {
   const path = databasePath();
-  await import("./client");
+  createDb(path);
   console.log(`migrations applied to ${path}`);
-}
-
-main().catch((error) => {
+} catch (error) {
   console.error("migration failed:", error);
   process.exit(1);
-});
+}

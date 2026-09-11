@@ -4,14 +4,23 @@ import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { databasePath } from "./path";
 import * as schema from "./schema";
 
-export type Db = ReturnType<typeof create>;
+export type Db = ReturnType<typeof createDb>;
 
-function create() {
-  const sqlite = new Database(databasePath());
+/**
+ * Opens a migrated database at `path`.
+ *
+ * Exported so tests can run against a real `:memory:` SQLite instance instead of a mock. The
+ * interesting behaviour here lives in constraints, triggers, and upsert semantics, none of
+ * which a fake would reproduce faithfully.
+ */
+export function createDb(path: string = databasePath()) {
+  const sqlite = new Database(path);
 
   // WAL lets the UI keep reading while a feed refresh writes. busy_timeout stops concurrent
   // refreshes from failing outright on the single writer lock.
-  sqlite.pragma("journal_mode = WAL");
+  if (path !== ":memory:") {
+    sqlite.pragma("journal_mode = WAL");
+  }
   sqlite.pragma("busy_timeout = 5000");
   // SQLite leaves this off per connection, and the articles -> feeds cascade depends on it.
   sqlite.pragma("foreign_keys = ON");
@@ -25,8 +34,17 @@ function create() {
 // would open another handle to the same file and re-run the migrator.
 const globalForDb = globalThis as unknown as { currentsDb?: Db };
 
-export const db: Db = globalForDb.currentsDb ?? create();
+/**
+ * Returns the process-wide database handle, opening it on first use.
+ *
+ * Lazy on purpose: a module-level `createDb()` would touch the filesystem simply because
+ * something imported this file, which breaks tests and any build-time analysis.
+ */
+export function getDb(): Db {
+  const existing = globalForDb.currentsDb;
+  if (existing) return existing;
 
-if (process.env.NODE_ENV !== "production") {
-  globalForDb.currentsDb = db;
+  const created = createDb();
+  globalForDb.currentsDb = created;
+  return created;
 }
