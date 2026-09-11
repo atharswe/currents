@@ -39,7 +39,8 @@ export function toFtsQuery(input: string): string | null {
       const isLast = index === terms.length - 1;
       // A trailing wildcard only makes sense on a single word, and only on the term the user
       // is still typing.
-      const wildcard = isLast && !term.isPhrase && term.text.length > 1 ? "*" : "";
+      const wildcard =
+        isLast && !term.isPhrase && term.text.length > 1 ? "*" : "";
       return `"${escaped}"${wildcard}`;
     })
     .join(" ");

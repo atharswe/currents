@@ -49,10 +49,13 @@ beforeEach(() => {
         });
       }
       if (url === "https://not-a-feed.example.com/") {
-        return new Response("<!doctype html><html><body>no feed here</body></html>", {
-          status: 200,
-          headers: jsonHeaders("text/html"),
-        });
+        return new Response(
+          "<!doctype html><html><body>no feed here</body></html>",
+          {
+            status: 200,
+            headers: jsonHeaders("text/html"),
+          },
+        );
       }
       return new Response(RSS, {
         status: 200,

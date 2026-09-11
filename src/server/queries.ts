@@ -102,7 +102,9 @@ export function encodeCursor(cursor: ArticleCursor): string {
   return `${cursor.sortKey}_${cursor.id}`;
 }
 
-export function decodeCursor(raw: string | undefined | null): ArticleCursor | null {
+export function decodeCursor(
+  raw: string | undefined | null,
+): ArticleCursor | null {
   if (!raw) return null;
   const [key, id] = raw.split("_");
   const parsedKey = Number(key);
@@ -194,7 +196,9 @@ export function listArticles(options: ListArticlesOptions = {}): ArticlePage {
   return {
     items: page.map(({ sortKey: _sortKey, ...item }) => item),
     nextCursor:
-      hasMore && last ? encodeCursor({ sortKey: Number(last.sortKey), id: last.id }) : null,
+      hasMore && last
+        ? encodeCursor({ sortKey: Number(last.sortKey), id: last.id })
+        : null,
   };
 }
 

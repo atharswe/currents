@@ -41,7 +41,9 @@ describe("toFtsQuery", () => {
   });
 
   it("mixes phrases and loose words", () => {
-    expect(toFtsQuery('"rate limiting" nginx')).toBe('"rate limiting" "nginx"*');
+    expect(toFtsQuery('"rate limiting" nginx')).toBe(
+      '"rate limiting" "nginx"*',
+    );
   });
 
   it("recovers from an unbalanced quote", () => {

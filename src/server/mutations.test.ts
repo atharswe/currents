@@ -102,9 +102,13 @@ describe("bulk read", () => {
 
   it("marks everything", () => {
     expect(markAllRead(db)).toBe(2);
-    expect(db.select().from(articles).all().every((row) => row.isRead)).toBe(
-      true,
-    );
+    expect(
+      db
+        .select()
+        .from(articles)
+        .all()
+        .every((row) => row.isRead),
+    ).toBe(true);
   });
 });
 

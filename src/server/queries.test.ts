@@ -145,14 +145,9 @@ describe("listArticles", () => {
     expect(second.items.map((item) => item.id)).not.toEqual(
       first.items.map((item) => item.id),
     );
-    expect(
-      [...first.items, ...second.items].map((item) => item.title),
-    ).toEqual([
-      "Evening recap",
-      "Morning briefing",
-      "SQLite tricks",
-      "No date item",
-    ]);
+    expect([...first.items, ...second.items].map((item) => item.title)).toEqual(
+      ["Evening recap", "Morning briefing", "SQLite tricks", "No date item"],
+    );
     expect(second.nextCursor).toBeNull();
   });
 
